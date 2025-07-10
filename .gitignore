@@ -1,0 +1,16 @@
+#  Local .Terraform files
+# Terraform files
+**/.terraform/*
+
+# Terraform state files
+*.tfstate               
+*.tfstate.          
+
+#  Terraform lock files
+.terraform.lock.hcl 
+
+# Provider binaries (large files)
+**/terraform-provider-*
+
+# Document 
+*.Docs
