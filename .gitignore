@@ -4,13 +4,15 @@
 
 # Terraform state files
 *.tfstate               
-*.tfstate.          
+*.tfstate.backup  
+    
 
 #  Terraform lock files
 .terraform.lock.hcl 
 
 # Provider binaries (large files)
 **/terraform-provider-*
+
 
 # Document 
 *.Docs
