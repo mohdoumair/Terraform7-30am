@@ -28,8 +28,8 @@ resource "aws_vpc" "name" {
   engine               = "mysql"
   engine_version       = "8.0"
   instance_class       = "db.t3.micro"
-  username             =  data.aws_secretsmanager_secret_version.rds_secret_version.secret_string["username"]
-  password             = data.aws_secretsmanager_secret_version.rds_secret_version.secret_string["password"]
+  username             = local.rds_secret["username"]
+  password             = local.rds_secret["password"]
   parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true  
 }
@@ -59,4 +59,17 @@ resource "aws_secretsmanager_secret_rotation" "rds_rotation" {
     automatically_after_days = 30
   }
 }
+# Fetch the secret metadata
+data "aws_secretsmanager_secret" "rds_secret" {
+  name = "rds-mysql-secret"  # Make sure this matches your actual secret name
+}
+
+# Fetch the latest version of the secret
+data "aws_secretsmanager_secret_version" "rds_secret_version" {
+  secret_id = data.aws_secretsmanager_secret.rds_secret.id
+}
+locals {
+  rds_secret = jsondecode(data.aws_secretsmanager_secret_version.rds_secret_version.secret_string)
+}
+
 

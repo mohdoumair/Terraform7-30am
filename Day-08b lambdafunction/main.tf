@@ -26,29 +26,11 @@ resource "aws_lambda_function" "my_lambda" {
   runtime       = "python3.12"
   timeout       = 900
   memory_size   = 128
+
   filename         = "lambda_function.zip"  # Ensure this file exists
-     source_code_hash = filebase64sha256("lambda_function.zip")
+  source_code_hash = filebase64sha256("lambda_function.zip")
 
   #Without source_code_hash, Terraform might not detect when the code in the ZIP file has changed — meaning your Lambda might not update even after uploading a new ZIP.
 
 #This hash is a checksum that triggers a deployment.
 }
-resource "aws_lambda_function" "my_lambda2" {
-  function_name = "my_lambda_function"
-  role          = aws_iam_role.lambda_exec.arn
-  handler       = "lambda_function.lambda_handler"
-  runtime       = "python3.11"
-
-  # Lambda code from S3
-  s3_bucket         = "dfghghfgbhrtfghrth"
-  s3_key            = "lambda_function.py "
-  # Optional if versioning is enabled
-  # s3_object_version = "A1B2C3D4E5..."
-
-  # Optional: Helps trigger updates if you're not using object versioning
-  source_code_hash = filebase64sha256("lambda_function.zip")
-}
-
- 
-
-
