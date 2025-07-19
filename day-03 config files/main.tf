@@ -3,6 +3,5 @@ resource "aws_instance" "name" {
     ami=var.aws_instance
   
 }
-resource "aws_s3_bucket" "name" {
- bucket = var.aws_s3_bucket
-}
+#resource "aws_s3_bucket" "name" {
+ #bucket = var.aws_s3_bucket
