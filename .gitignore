@@ -12,7 +12,7 @@
 
 # Provider binaries (large files)
 **/terraform-provider-*
-
+.terraform.tfvars
 
 # Document 
 *.Docs
