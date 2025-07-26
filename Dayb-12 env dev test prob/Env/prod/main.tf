@@ -19,11 +19,3 @@ module "ec2" {
   ami_id = var.ami_id
   subnet_id = module.vpc.public_subnet_id
 }
-module "rds" {
-  source         = "../../modules/rds"
-  subnet_ids     = module.vpc.private_subnet_ids  # ✅ CORRECT
-  instance_class = var.instance_class
-  db_name        = var.db_name
-  db_user        = var.db_user
-  db_password    = var.db_password
-}
