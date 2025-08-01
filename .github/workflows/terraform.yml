@@ -1,42 +1,59 @@
-name: Terraform CI
+name: Terraform CI/CD
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'jenkins pratice/**'   # Only trigger if PR touches this folder
+
   push:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - 'enkins pratice/**'   # Only trigger if push modifies this folder
+
   workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform action'
+        required: true
+        default: destroy
+        type: choice
+        options:
+          - destroy
+
+env:
+  TF_DIR: ./day-3 all config
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.TF_DIR }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Terraform
+      - name: 🔧 Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.5.7
+          terraform_version: 1.6.6
 
-      - name: Install yq
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y yq
-
-      - name: Parse terraform.yml
-        id: config
-        run: |
-          echo "TF_DIR=$(yq e '.terraform_dir' terraform.yml)" >> $GITHUB_ENV
-          echo "TF_ACTIONS=$(yq e '.terraform_actions' terraform.yml)" >> $GITHUB_ENV
-
-      - name: Terraform Init
+      - name: 🧪 Terraform Init
         run: terraform init
-        working-directory: ${{ env.TF_DIR }}
 
-      - name: Terraform Plan
+      - name: 📋 Terraform Plan
         run: terraform plan
-        working-directory: ${{ env.TF_DIR }}
 
-      - name: Terraform Apply
-        run: terraform apply ${{ env.TF_ACTIONS }} -auto-approve
-        working-directory: ${{ env.TF_DIR }}
+      - name: 🚀 Terraform Apply (on push to main)
+        if: github.event_name == 'push'
+        run: terraform apply -auto-approve
+
+      - name: 💣 Terraform Destroy (manual only)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
