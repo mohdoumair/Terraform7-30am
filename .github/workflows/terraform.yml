@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - 'jenkins pratice/**'   # Only trigger if PR touches this folder
+      - 'Day-09 modules/**'   # Only trigger if PR touches this folder
 
   push:
     branches:
       - main
     paths:
-      - 'jenkins pratice/**'   # Only trigger if push modifies this folder
+      - 'Day-09 modules/**'   # Only trigger if push modifies this folder
 
   workflow_dispatch:
     inputs:
@@ -24,7 +24,7 @@ on:
           - destroy
 
 env:
-  TF_DIR: ./jenkins pratice
+  TF_DIR: ./Day-09 modules
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
